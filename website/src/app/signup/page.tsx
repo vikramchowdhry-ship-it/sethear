@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 type Reminder = {
   type: string;
@@ -83,9 +84,15 @@ export default function SignUp() {
           You&apos;re all set!
         </h1>
         <p className="mt-3 text-slate-600">
-          We&apos;ve saved your loved one&apos;s profile. Once the phone
-          service is live, calls will begin at the time you selected.
+          We&apos;ve saved your loved one&apos;s profile. Calls will begin at
+          the time you selected.
         </p>
+        <Link
+          href="/dashboard"
+          className="mt-8 inline-block rounded-full bg-amber-600 px-8 py-3 text-base font-semibold text-white hover:bg-amber-700 transition-colors"
+        >
+          Go to Your Dashboard
+        </Link>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 
 export default function Footer() {
   return (
@@ -6,7 +7,10 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-10 text-sm text-slate-600">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <p className="font-semibold text-slate-800">SetHear</p>
+            <div className="flex items-center gap-2">
+              <Logo size={22} />
+              <p className="font-semibold text-slate-800">SetHear</p>
+            </div>
             <p className="mt-2 text-slate-500">
               A friendly daily phone call for seniors who live alone.
             </p>

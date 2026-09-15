@@ -19,5 +19,5 @@ export async function loginAction(
   }
 
   await createSession(user.id);
-  redirect("/family-tree");
+  redirect("/dashboard");
 }
