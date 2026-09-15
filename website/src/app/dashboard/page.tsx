@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSessionUserId } from "@/lib/auth";
+import { LANGUAGES, langOf } from "@/lib/i18n";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -84,6 +85,12 @@ export default async function Dashboard() {
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <dt className="text-slate-500">Emergency contact</dt>
               <dd className="font-medium text-slate-900">{senior.emergencyContact}</dd>
+            </div>
+            <div className="flex justify-between border-b border-slate-100 pb-2">
+              <dt className="text-slate-500">Call language</dt>
+              <dd className="font-medium text-slate-900">
+                {LANGUAGES[langOf(senior.language)].label}
+              </dd>
             </div>
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <dt className="text-slate-500">Faith preference</dt>

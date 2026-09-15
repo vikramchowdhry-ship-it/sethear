@@ -25,6 +25,7 @@ model SeniorProfile {
   seniorName        String
   seniorPhone       String
   preferredCallTime String
+  language          String  @default("en") // "en" | "fr" | "es" | "hi" | "pa" | "zh"
   faithPreference   String? // e.g. "christian", "muslim", "jewish", "hindu", "buddhist", "none"
   familyName        String
   familyPhone       String

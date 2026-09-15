@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionUserId } from "@/lib/auth";
 import { sendEmail, signupConfirmationEmail } from "@/lib/email";
+import { LANGUAGES } from "@/lib/i18n";
 
 export async function POST(request: Request) {
   const userId = await getSessionUserId();
@@ -15,6 +16,7 @@ export async function POST(request: Request) {
     seniorName,
     seniorPhone,
     preferredCallTime,
+    language,
     faithPreference,
     familyName,
     familyPhone,
@@ -59,6 +61,7 @@ export async function POST(request: Request) {
       seniorName,
       seniorPhone,
       preferredCallTime,
+      language: language && language in LANGUAGES ? language : "en",
       faithPreference: faithPreference || null,
       familyName,
       familyPhone,

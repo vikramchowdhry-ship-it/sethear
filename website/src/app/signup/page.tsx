@@ -46,6 +46,7 @@ export default function SignUp() {
       seniorName: form.get("seniorName"),
       seniorPhone: form.get("seniorPhone"),
       preferredCallTime: form.get("preferredCallTime"),
+      language: form.get("language"),
       faithPreference: form.get("faithPreference"),
       familyName: form.get("familyName"),
       familyPhone: form.get("familyPhone"),
@@ -135,6 +136,20 @@ export default function SignUp() {
               defaultValue="09:00"
               className={inputClass}
             />
+          </Field>
+
+          <Field
+            label="Call language"
+            hint="The call will greet them and read reminders in this language"
+          >
+            <select name="language" className={inputClass} defaultValue="en">
+              <option value="en">English</option>
+              <option value="fr">French (Canadian)</option>
+              <option value="es">Spanish</option>
+              <option value="hi">Hindi</option>
+              <option value="pa">Punjabi</option>
+              <option value="zh">Mandarin Chinese</option>
+            </select>
           </Field>
 
           <Field

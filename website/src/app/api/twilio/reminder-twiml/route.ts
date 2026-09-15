@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { LANGUAGES, STRINGS, langOf } from "@/lib/i18n";
 
 export async function POST(request: Request) {
   return handle(request);
@@ -17,14 +18,18 @@ async function handle(request: Request) {
     include: { senior: true },
   });
 
+  const lang = langOf(reminder?.senior.language);
+  const { sayVoice, sayLang } = LANGUAGES[lang];
+  const t = STRINGS[lang];
+
   const message = reminder
-    ? `Hello ${escapeXml(reminder.senior.seniorName)}, this is your reminder: ${escapeXml(reminder.description)}.`
+    ? t.reminderGreeting(reminder.senior.seniorName, reminder.description)
     : "Hello, this was a reminder call, but the details couldn't be found.";
 
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna">${message}</Say>
-  <Say voice="Polly.Joanna">That's all for now. Goodbye.</Say>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(message)}</Say>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(t.reminderGoodbye)}</Say>
   <Hangup/>
 </Response>`;
 

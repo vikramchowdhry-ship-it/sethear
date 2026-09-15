@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { formDataToParams, normalizePhone, validateTwilioRequest } from "@/lib/twilio";
+import { LANGUAGES, STRINGS, langOf } from "@/lib/i18n";
 
 export async function POST(request: Request) {
   const params = await formDataToParams(request);
@@ -19,23 +20,28 @@ export async function POST(request: Request) {
   if (!senior) {
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna">Hi there. I don't have a profile matched to this number yet. Please ask your family to sign up for you on the SetHear website. Goodbye for now.</Say>
+  <Say voice="Polly.Joanna">${escapeXml(STRINGS.en.unrecognizedCaller)}</Say>
   <Hangup/>
 </Response>`;
     return new NextResponse(twiml, { headers: { "Content-Type": "text/xml" } });
   }
 
-  const reminderLines = senior.reminders
-    .map((r) => `You also asked me to remind you: ${r.description}.`)
-    .join(" ");
+  const lang = langOf(senior.language);
+  const { sayVoice, sayLang, gatherLang } = LANGUAGES[lang];
+  const t = STRINGS[lang];
+
+  const reminderLines = senior.reminders.map((r) => t.reminderLine(r.description)).join(" ");
+  const greeting = `${t.greeting(senior.seniorName)} ${reminderLines}`;
+
+  const gatherLangAttr = gatherLang ? ` language="${gatherLang}"` : "";
 
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna">Hello ${escapeXml(senior.seniorName)}, it's so good to hear from you. ${escapeXml(reminderLines)}</Say>
-  <Gather input="speech" speechTimeout="auto" action="/api/twilio/voice/gather" method="POST">
-    <Say voice="Polly.Joanna">Would you like to share a story today? Just say yes or no.</Say>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(greeting)}</Say>
+  <Gather input="dtmf speech" numDigits="1" speechTimeout="auto"${gatherLangAttr} action="/api/twilio/voice/gather?lang=${lang}" method="POST">
+    <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(t.askStory)}</Say>
   </Gather>
-  <Say voice="Polly.Joanna">I didn't catch that. We can try again next time. Take care.</Say>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(t.noResponseFallback)}</Say>
   <Hangup/>
 </Response>`;
 
