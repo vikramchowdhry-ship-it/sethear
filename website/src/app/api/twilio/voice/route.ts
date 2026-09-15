@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { formDataToParams, normalizePhone, validateTwilioRequest } from "@/lib/twilio";
 import { LANGUAGES, STRINGS, langOf } from "@/lib/i18n";
+import { aiConfigured } from "@/lib/ai";
 
 export async function POST(request: Request) {
   const params = await formDataToParams(request);
@@ -32,9 +33,29 @@ export async function POST(request: Request) {
 
   const reminderLines = senior.reminders.map((r) => t.reminderLine(r.description)).join(" ");
   const greeting = `${t.greeting(senior.seniorName)} ${reminderLines}`;
-
   const gatherLangAttr = gatherLang ? ` language="${gatherLang}"` : "";
 
+  if (aiConfigured()) {
+    const callSid = params.CallSid || "";
+    await prisma.callSession.upsert({
+      where: { callSid },
+      create: { callSid, seniorId: senior.id, messages: [], turns: 0 },
+      update: {},
+    });
+
+    const twiml = `<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(greeting)}</Say>
+  <Gather input="speech" speechTimeout="auto"${gatherLangAttr} action="/api/twilio/voice/converse?lang=${lang}" method="POST">
+    <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(t.openCheckIn)}</Say>
+  </Gather>
+  <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(t.noResponseFallback)}</Say>
+  <Hangup/>
+</Response>`;
+    return new NextResponse(twiml, { headers: { "Content-Type": "text/xml" } });
+  }
+
+  // Fallback: no AI key configured yet — use the simple scripted yes/no flow.
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="${sayVoice}" language="${sayLang}">${escapeXml(greeting)}</Say>

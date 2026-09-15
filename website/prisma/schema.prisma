@@ -39,8 +39,20 @@ model SeniorProfile {
   reminders     Reminder[]
   familyMembers FamilyMember[]
   stories       Story[]
+  callSessions  CallSession[]
 
   @@index([seniorPhone])
+}
+
+model CallSession {
+  id        String        @id @default(cuid())
+  callSid   String        @unique
+  senior    SeniorProfile @relation(fields: [seniorId], references: [id], onDelete: Cascade)
+  seniorId  String
+  messages  Json // [{ role: "user" | "assistant", content: string }]
+  turns     Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model Reminder {

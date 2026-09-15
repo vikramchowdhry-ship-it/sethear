@@ -29,6 +29,7 @@ type Strings = {
   reminderGreeting: (name: string, description: string) => string;
   reminderGoodbye: string;
   yesSpeechPattern: RegExp | null;
+  openCheckIn: string;
 };
 
 export const STRINGS: Record<LangCode, Strings> = {
@@ -47,6 +48,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `Hello ${name}, this is your reminder: ${d}.`,
     reminderGoodbye: "That's all for now. Goodbye.",
     yesSpeechPattern: /\byes\b|yeah|sure|okay|ok\b/i,
+    openCheckIn: "So, how are you doing today?",
   },
   fr: {
     greeting: (name) => `Bonjour ${name}, c'est un plaisir de vous entendre.`,
@@ -63,6 +65,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `Bonjour ${name}, voici votre rappel : ${d}.`,
     reminderGoodbye: "C'est tout pour l'instant. Au revoir.",
     yesSpeechPattern: /\boui\b|ouais/i,
+    openCheckIn: "Alors, comment allez-vous aujourd'hui?",
   },
   es: {
     greeting: (name) => `Hola ${name}, qué gusto escucharte.`,
@@ -79,6 +82,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `Hola ${name}, este es tu recordatorio: ${d}.`,
     reminderGoodbye: "Eso es todo por ahora. Adiós.",
     yesSpeechPattern: /\bs[ií]\b|claro/i,
+    openCheckIn: "Entonces, ¿cómo estás hoy?",
   },
   hi: {
     greeting: (name) => `नमस्ते ${name}, आपकी आवाज़ सुनकर बहुत अच्छा लगा।`,
@@ -95,6 +99,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `नमस्ते ${name}, यह आपकी याद दिलाने वाली बात है: ${d}।`,
     reminderGoodbye: "अभी के लिए बस इतना ही। अलविदा।",
     yesSpeechPattern: /हाँ|हां|ha\b|haan/i,
+    openCheckIn: "तो, आज आप कैसे हैं?",
   },
   pa: {
     greeting: (name) => `ਸਤ ਸ੍ਰੀ ਅਕਾਲ ${name} ਜੀ, ਤੁਹਾਡੀ ਆਵਾਜ਼ ਸੁਣ ਕੇ ਬਹੁਤ ਖੁਸ਼ੀ ਹੋਈ।`,
@@ -111,6 +116,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `ਸਤ ਸ੍ਰੀ ਅਕਾਲ ${name} ਜੀ, ਇਹ ਤੁਹਾਡੀ ਯਾਦ-ਦਹਾਨੀ ਹੈ: ${d}।`,
     reminderGoodbye: "ਹੁਣ ਲਈ ਬੱਸ ਇੰਨਾ ਹੀ। ਅਲਵਿਦਾ।",
     yesSpeechPattern: null, // no reliable Punjabi speech recognition — DTMF is the real signal
+    openCheckIn: "ਤਾਂ, ਅੱਜ ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?",
   },
   zh: {
     greeting: (name) => `你好 ${name}，很高兴听到你的声音。`,
@@ -124,6 +130,7 @@ export const STRINGS: Record<LangCode, Strings> = {
     reminderGreeting: (name, d) => `你好 ${name}，这是你的提醒：${d}。`,
     reminderGoodbye: "就这些了，再见。",
     yesSpeechPattern: /是|好的|要|可以/,
+    openCheckIn: "那么，你今天怎么样？",
   },
 };
 
