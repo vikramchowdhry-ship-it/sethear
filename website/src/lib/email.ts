@@ -49,6 +49,19 @@ export function signupConfirmationEmail(seniorName: string, callTime: string) {
   };
 }
 
+export function resetPasswordEmail(resetUrl: string) {
+  return {
+    subject: "Reset your SetHear password",
+    html: `
+      <p>Hi,</p>
+      <p>We got a request to reset your SetHear password. This link works for 1 hour:</p>
+      <p><a href="${resetUrl}">${resetUrl}</a></p>
+      <p>If you didn't request this, you can safely ignore this email — your password won't change.</p>
+      <p style="color:#888;font-size:12px;margin-top:24px;">This is an automated message from SetHear.</p>
+    `,
+  };
+}
+
 function escapeHtml(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }

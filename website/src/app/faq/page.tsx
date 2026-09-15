@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     q: "Who can hear what my loved one says on a call?",
-    a: "No one. We don't share conversation content with family members. Family only receives a missed-call alert and a high-level weekly summary (like call frequency), never transcripts or details.",
+    a: "No one hears the raw call, and we don't keep a transcript — the conversation itself is discarded as soon as the call ends. The one exception: if your loved one shares a story during a call, that specific story (not the surrounding conversation) is saved and visible on the account, unless they mark it private. Family also gets an email if a scheduled call goes unanswered.",
   },
   {
     q: "How does the “where did I put it” memory feature work?",
@@ -25,7 +25,11 @@ const faqs = [
   },
   {
     q: "Can my loved one opt out or stop service anytime?",
-    a: "Yes, at any time, by asking during a call or by a family member contacting us. All stored information is deleted on request.",
+    a: "Yes, at any time, by asking during a call or by emailing us. All stored information is deleted on request.",
+  },
+  {
+    q: "Can multiple family members see the account?",
+    a: "Right now, one login per family sees everything on that account. We don't yet support giving different relatives different levels of access — if that matters to you, let us know.",
   },
   {
     q: "Does it push religion on people?",

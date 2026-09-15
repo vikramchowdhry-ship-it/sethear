@@ -23,7 +23,14 @@ export async function POST(request: Request) {
 
   const session = await prisma.callSession.findUnique({
     where: { callSid },
-    include: { senior: { include: { reminders: { where: { recurrence: "daily" } } } } },
+    include: {
+      senior: {
+        include: {
+          reminders: { where: { recurrence: "daily" } },
+          memoryItems: true,
+        },
+      },
+    },
   });
 
   if (!session) {
@@ -42,12 +49,14 @@ export async function POST(request: Request) {
   }
 
   const remindersRead = session.senior.reminders.map((r) => r.description);
+  const memories = session.senior.memoryItems.map((m) => ({ item: m.item, location: m.location }));
 
   const result = await converse(
     history,
     session.senior.seniorName,
     lang,
     remindersRead,
+    memories,
     session.turns,
   );
 
@@ -66,10 +75,38 @@ export async function POST(request: Request) {
     });
   }
 
-  await prisma.callSession.update({
-    where: { callSid },
-    data: { messages: history, turns: session.turns + 1 },
-  });
+  if (result.savedMemory) {
+    const existing = session.senior.memoryItems.find(
+      (m) => m.item.toLowerCase() === result.savedMemory!.item.toLowerCase(),
+    );
+    if (existing) {
+      await prisma.memoryItem.update({
+        where: { id: existing.id },
+        data: { location: result.savedMemory.location },
+      });
+    } else {
+      await prisma.memoryItem.create({
+        data: {
+          seniorId: session.seniorId,
+          item: result.savedMemory.item,
+          location: result.savedMemory.location,
+        },
+      });
+    }
+  }
+
+  const callEnding = result.emergency || result.endCall || !result.reply;
+
+  if (callEnding) {
+    // The conversation is over — we only ever kept the transcript to give
+    // the AI context mid-call. Delete it now rather than storing it forever.
+    await prisma.callSession.delete({ where: { callSid } }).catch(() => {});
+  } else {
+    await prisma.callSession.update({
+      where: { callSid },
+      data: { messages: history, turns: session.turns + 1 },
+    });
+  }
 
   if (result.emergency) {
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>

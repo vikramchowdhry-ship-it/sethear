@@ -9,7 +9,7 @@ const features = [
   {
     icon: "💊",
     title: "Medication & Appointment Reminders",
-    body: "Friendly nudges for pills and appointments — set up once by family, delivered every time.",
+    body: "Friendly nudges for pills and appointments, set up once by family — and an email to you if a reminder call doesn't go through.",
   },
   {
     icon: "🙏",
@@ -29,7 +29,7 @@ const features = [
   {
     icon: "👨‍👩‍👧",
     title: "Family Peace of Mind",
-    body: "If a scheduled call ever goes unanswered, family is notified right away — no news is good news.",
+    body: "If a scheduled call goes unanswered, you'll get an email. If you don't hear from us, that reflects what we know — not a guarantee that everything is fine.",
   },
   {
     icon: "🌳",

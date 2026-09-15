@@ -17,7 +17,7 @@ const steps = [
   {
     step: "4",
     title: "Family stays in the loop",
-    body: "If a scheduled call ever goes unanswered, family is notified. A weekly summary shares call frequency and general well-being — never private conversation details.",
+    body: "If a scheduled call goes unanswered, family gets an email — never the conversation itself, which is discarded when the call ends. Stories your loved one chooses to share show up on the account too.",
   },
 ];
 
@@ -57,7 +57,7 @@ export default function HowItWorks() {
           <li>Give medical, mental health, or legal advice</li>
           <li>Diagnose memory loss, dementia, or any health condition</li>
           <li>Handle a medical emergency — it always redirects to 911</li>
-          <li>Share what someone says on a call with anyone besides them</li>
+          <li>Keep a transcript, or share the conversation itself with anyone — only stories your loved one chooses to share are saved</li>
           <li>Push a particular religion, or any religion at all, unprompted</li>
         </ul>
       </div>

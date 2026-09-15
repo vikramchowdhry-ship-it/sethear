@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, createSession } from "@/lib/auth";
+import { verifyPassword, createSession, safeNextPath } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function loginAction(
@@ -19,5 +19,5 @@ export async function loginAction(
   }
 
   await createSession(user.id);
-  redirect("/dashboard");
+  redirect(safeNextPath(formData.get("next")) || "/dashboard");
 }

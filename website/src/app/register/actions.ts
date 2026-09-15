@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { hashPassword, createSession } from "@/lib/auth";
+import { hashPassword, createSession, safeNextPath } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export async function registerAction(
@@ -29,5 +29,5 @@ export async function registerAction(
   });
 
   await createSession(user.id);
-  redirect("/signup");
+  redirect(safeNextPath(formData.get("next")) || "/signup");
 }

@@ -56,6 +56,11 @@ export default async function Dashboard() {
           value={formatTime(senior.preferredCallTime)}
         />
         <StatCard
+          icon="🕐"
+          label="Last check-in call"
+          value={senior.lastCheckInAt ? formatDate(senior.lastCheckInAt) : "Not yet"}
+        />
+        <StatCard
           icon="⏰"
           label="Active reminders"
           value={String(senior.reminders.length)}
@@ -198,4 +203,13 @@ function formatTime(time: string) {
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function formatDate(d: Date) {
+  return new Date(d).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }

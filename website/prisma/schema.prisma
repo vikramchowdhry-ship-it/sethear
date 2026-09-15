@@ -15,7 +15,18 @@ model User {
   name         String?
   createdAt    DateTime @default(now())
 
-  seniors SeniorProfile[]
+  seniors      SeniorProfile[]
+  resetTokens  PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
 }
 
 model SeniorProfile {
@@ -33,15 +44,29 @@ model SeniorProfile {
   relationship      String
   emergencyContact  String
   notes             String?
-  consentGiven      Boolean  @default(false)
-  createdAt         DateTime @default(now())
+  consentGiven      Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  lastCheckInAt     DateTime?
 
   reminders     Reminder[]
   familyMembers FamilyMember[]
   stories       Story[]
   callSessions  CallSession[]
+  memoryItems   MemoryItem[]
 
   @@index([seniorPhone])
+}
+
+model MemoryItem {
+  id           String        @id @default(cuid())
+  senior       SeniorProfile @relation(fields: [seniorId], references: [id], onDelete: Cascade)
+  seniorId     String
+  item         String // e.g. "glasses"
+  location     String // e.g. "kitchen table"
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([seniorId, item])
 }
 
 model CallSession {

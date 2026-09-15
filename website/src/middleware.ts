@@ -12,15 +12,27 @@ export async function middleware(request: NextRequest) {
   if (!isProtected) return NextResponse.next();
 
   const token = request.cookies.get("session")?.value;
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  const authFailed = !token || !(await verify(token));
+
+  if (authFailed) {
+    // /signup is the natural first stop for a brand-new visitor, so send them
+    // to create an account rather than log in to one they don't have yet.
+    // Everything else assumes a returning user.
+    const destination = pathname.startsWith("/signup") ? "/register" : "/login";
+    const url = new URL(destination, request.url);
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
   }
 
+  return NextResponse.next();
+}
+
+async function verify(token: string) {
   try {
     await jwtVerify(token, secret);
-    return NextResponse.next();
+    return true;
   } catch {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return false;
   }
 }
 
