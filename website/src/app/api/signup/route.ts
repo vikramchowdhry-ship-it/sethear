@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionUserId } from "@/lib/auth";
+import { sendEmail, signupConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   const userId = await getSessionUserId();
@@ -80,6 +81,11 @@ export async function POST(request: Request) {
       },
     },
   });
+
+  const { subject, html } = signupConfirmationEmail(seniorName, preferredCallTime);
+  await sendEmail({ to: familyEmail, subject, html }).catch((err) =>
+    console.error("Failed to send signup confirmation email:", err),
+  );
 
   return NextResponse.json({ id: profile.id }, { status: 201 });
 }

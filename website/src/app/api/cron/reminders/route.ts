@@ -46,6 +46,9 @@ export async function GET(request: Request) {
         to: reminder.senior.seniorPhone,
         from: process.env.TWILIO_PHONE_NUMBER!,
         url: `${baseUrl}/api/twilio/reminder-twiml?reminderId=${reminder.id}`,
+        statusCallback: `${baseUrl}/api/twilio/reminder-status?reminderId=${reminder.id}`,
+        statusCallbackEvent: ["completed"],
+        statusCallbackMethod: "POST",
       });
       await prisma.reminder.update({
         where: { id: reminder.id },
