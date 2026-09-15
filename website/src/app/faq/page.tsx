@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FAQ",
+  description:
+    "Answers about SetHear: privacy, recording, the memory helper, emergencies, languages, and how to stop or delete your data.",
+};
+
 const faqs = [
   {
     q: "Is this a medical device or a health monitoring service?",

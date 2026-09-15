@@ -21,6 +21,7 @@ export default function Footer() {
               <li><Link href="/how-it-works" className="hover:text-amber-700">How It Works</Link></li>
               <li><Link href="/pricing" className="hover:text-amber-700">Pricing</Link></li>
               <li><Link href="/faq" className="hover:text-amber-700">FAQ</Link></li>
+              <li><Link href="/about" className="hover:text-amber-700">About</Link></li>
               <li><Link href="/contact" className="hover:text-amber-700">Contact</Link></li>
               <li><Link href="/signup" className="hover:text-amber-700">Sign Up</Link></li>
             </ul>
@@ -39,7 +40,7 @@ export default function Footer() {
           medical or mental health care. In an emergency, always call 911.
         </div>
         <p className="mt-6 text-xs text-slate-400">
-          &copy; {new Date().getFullYear()} SetHear. All rights reserved.
+          &copy; {new Date().getFullYear()} SetHear, founded by Khushi Chowdhary. All rights reserved.
         </p>
       </div>
     </footer>

@@ -20,10 +20,32 @@ const fraunces = Fraunces({
   weight: ["500", "600", "700"],
 });
 
+const SITE_URL = "https://sethear.com";
+const DEFAULT_DESCRIPTION =
+  "SetHear is an AI phone companion for seniors who live alone — daily check-in calls, medication reminders, and family updates, in English, French, Spanish, Hindi, Punjabi, or Mandarin.";
+
 export const metadata: Metadata = {
-  title: "SetHear — A Friendly Daily Call for Seniors",
-  description:
-    "SetHear calls seniors who live alone for friendly conversation, gentle reminders, and a daily check-in — with family notified if a call is ever missed.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "SetHear — A Friendly Daily Call for Seniors",
+    template: "%s | SetHear",
+  },
+  description: DEFAULT_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "SetHear",
+    title: "SetHear — A Friendly Daily Call for Seniors",
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    images: ["/icon-512.png"],
+  },
+  twitter: {
+    card: "summary",
+    title: "SetHear — A Friendly Daily Call for Seniors",
+    description: DEFAULT_DESCRIPTION,
+    images: ["/icon-512.png"],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

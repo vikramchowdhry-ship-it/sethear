@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How It Works",
+  description:
+    "How SetHear's daily phone companion works: sign up, receive a warm AI-powered call every day, and stay connected through reminders and family updates.",
+};
+
 const steps = [
   {
     step: "1",

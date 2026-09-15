@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Use",
+  description: "The terms for using SetHear's AI phone companion service.",
+};
+
 export default function Terms() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 prose prose-slate">

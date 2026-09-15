@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "What SetHear collects, how AI processing works, who can see what, and your rights.",
+};
+
 export default function Privacy() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20 prose prose-slate">
@@ -10,12 +17,12 @@ export default function Privacy() {
 
       <h2>Who operates SetHear</h2>
       <p>
-        SetHear is currently an independent pilot project, not a registered
-        company. A real operating entity, business address, and designated
-        privacy contact will be established before this becomes a paid
-        product. Until then, this page and{" "}
-        <a href="/contact">contact@sethear.com</a> are the accurate contact
-        points.
+        SetHear was founded by Khushi Chowdhary. It is currently an
+        independent pilot project, not a registered company. A formal
+        operating entity, business address, and designated privacy officer
+        will be established before this becomes a paid product. Until then,
+        this page and <a href="/contact">contact@sethear.com</a> are the
+        accurate contact points.
       </p>
 
       <h2>What we collect</h2>

@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact & Support",
+  description: "Reach SetHear for support, to stop calls, delete your data, or request financial assistance.",
+};
+
 export default function Contact() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-20">
