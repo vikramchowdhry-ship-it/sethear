@@ -41,6 +41,11 @@ const features = [
     title: "Stories, Passed Down",
     body: "Life stories, recipes, and advice for the next generation — collected over calls, compiled into a keepsake Life Book.",
   },
+  {
+    icon: "🌐",
+    title: "Calls in Their Language",
+    body: "English, French, Spanish, Hindi, Punjabi, or Mandarin — the whole call happens in whichever language they're most comfortable in.",
+  },
 ];
 
 export default function Home() {
