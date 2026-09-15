@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "senior-companion-website",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
+      "runtimeArgs": [
+        "C:/Users/vikra/Documents/SeniorCompanionLine/website/node_modules/next/dist/bin/next",
+        "dev",
+        "C:/Users/vikra/Documents/SeniorCompanionLine/website",
+        "--port",
+        "3000"
+      ],
+      "port": 3000
+    }
+  ]
+}

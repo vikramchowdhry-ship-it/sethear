@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+
+  seniors SeniorProfile[]
+}
+
+model SeniorProfile {
+  id                String   @id @default(cuid())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  seniorName        String
+  seniorPhone       String
+  preferredCallTime String
+  faithPreference   String? // e.g. "christian", "muslim", "jewish", "hindu", "buddhist", "none"
+  familyName        String
+  familyPhone       String
+  familyEmail       String
+  relationship      String
+  emergencyContact  String
+  notes             String?
+  consentGiven      Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  reminders     Reminder[]
+  familyMembers FamilyMember[]
+  stories       Story[]
+
+  @@index([seniorPhone])
+}
+
+model Reminder {
+  id            String        @id @default(cuid())
+  senior        SeniorProfile @relation(fields: [seniorId], references: [id], onDelete: Cascade)
+  seniorId      String
+  type          String // "medication" | "appointment" | "other"
+  description   String
+  scheduledTime String
+  recurrence    String // "daily" | "weekly" | "once"
+  lastSentAt    DateTime?
+  createdAt     DateTime      @default(now())
+}
+
+model FamilyMember {
+  id           String        @id @default(cuid())
+  senior       SeniorProfile @relation(fields: [seniorId], references: [id], onDelete: Cascade)
+  seniorId     String
+  name         String
+  relationship String // "Parent" | "Spouse" | "Sibling" | "Child" | "Grandchild" | "Other"
+  birthYear    Int?
+  deathYear    Int?
+  bio          String?
+  createdAt    DateTime      @default(now())
+  stories      Story[]       @relation("StoryTags")
+}
+
+model Story {
+  id           String         @id @default(cuid())
+  senior       SeniorProfile  @relation(fields: [seniorId], references: [id], onDelete: Cascade)
+  seniorId     String
+  prompt       String
+  answer       String
+  recordingUrl String? // set when captured over the phone
+  capturedVia  String         @default("web") // "web" | "phone"
+  isPrivate    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  taggedPeople FamilyMember[] @relation("StoryTags")
+}
