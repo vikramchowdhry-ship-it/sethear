@@ -68,6 +68,13 @@ export default function MobileMenu({
                   Dashboard
                 </Link>
                 <Link
+                  href="/settings"
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-base font-medium text-slate-700 border-b border-slate-100"
+                >
+                  Settings
+                </Link>
+                <Link
                   href="/signup"
                   onClick={() => setOpen(false)}
                   className="mt-3 rounded-full bg-amber-600 px-6 py-2.5 text-center text-base font-semibold text-white hover:bg-amber-700"

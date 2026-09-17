@@ -46,6 +46,12 @@ export default async function NavBar() {
                 Dashboard
               </Link>
               <Link
+                href="/settings"
+                className="text-base font-medium text-slate-600 hover:text-amber-700 transition-colors whitespace-nowrap"
+              >
+                Settings
+              </Link>
+              <Link
                 href="/signup"
                 className="rounded-full bg-amber-600 px-5 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-amber-700 transition-colors whitespace-nowrap"
               >

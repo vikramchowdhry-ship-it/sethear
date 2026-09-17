@@ -1,7 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+
+const TIMEZONES = [
+  { value: "America/St_Johns", label: "Newfoundland Time" },
+  { value: "America/Halifax", label: "Atlantic Time" },
+  { value: "America/Toronto", label: "Eastern Time" },
+  { value: "America/Winnipeg", label: "Central Time" },
+  { value: "America/Edmonton", label: "Mountain Time" },
+  { value: "America/Vancouver", label: "Pacific Time" },
+  { value: "Pacific/Honolulu", label: "Hawaii Time" },
+  { value: "Europe/London", label: "UK Time" },
+  { value: "Asia/Kolkata", label: "India Time" },
+  { value: "Asia/Shanghai", label: "China Time" },
+];
 
 type Reminder = {
   type: string;
@@ -21,6 +34,16 @@ export default function SignUp() {
   const [reminders, setReminders] = useState<Reminder[]>([emptyReminder()]);
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [timezone, setTimezone] = useState("America/Toronto");
+
+  useEffect(() => {
+    try {
+      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (detected) setTimezone(detected);
+    } catch {
+      // keep the default
+    }
+  }, []);
 
   function updateReminder(index: number, patch: Partial<Reminder>) {
     setReminders((prev) =>
@@ -46,6 +69,7 @@ export default function SignUp() {
       seniorName: form.get("seniorName"),
       seniorPhone: form.get("seniorPhone"),
       preferredCallTime: form.get("preferredCallTime"),
+      timezone: form.get("timezone"),
       language: form.get("language"),
       faithPreference: form.get("faithPreference"),
       familyName: form.get("familyName"),
@@ -136,6 +160,27 @@ export default function SignUp() {
               defaultValue="09:00"
               className={inputClass}
             />
+          </Field>
+
+          <Field
+            label="Their time zone"
+            hint="The call time above is in this time zone — we've guessed based on your browser, double-check it's right for where they live"
+          >
+            <select
+              name="timezone"
+              className={inputClass}
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+            >
+              {TIMEZONES.map((tz) => (
+                <option key={tz.value} value={tz.value}>
+                  {tz.label}
+                </option>
+              ))}
+              {!TIMEZONES.some((tz) => tz.value === timezone) && (
+                <option value={timezone}>{timezone}</option>
+              )}
+            </select>
           </Field>
 
           <Field

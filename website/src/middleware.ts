@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PROTECTED_PREFIXES = ["/signup", "/family-tree", "/stories", "/life-book", "/dashboard"];
+const PROTECTED_PREFIXES = ["/signup", "/family-tree", "/stories", "/life-book", "/dashboard", "/settings"];
 
 const secret = new TextEncoder().encode(process.env.SESSION_SECRET);
 
@@ -43,5 +43,6 @@ export const config = {
     "/stories/:path*",
     "/life-book/:path*",
     "/dashboard/:path*",
+    "/settings/:path*",
   ],
 };

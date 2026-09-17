@@ -56,7 +56,7 @@ export async function getCurrentUser() {
   return prisma.user.findUnique({ where: { id: userId } });
 }
 
-const SAFE_REDIRECT_PATHS = ["/signup", "/family-tree", "/stories", "/life-book", "/dashboard"];
+const SAFE_REDIRECT_PATHS = ["/signup", "/family-tree", "/stories", "/life-book", "/dashboard", "/settings"];
 
 /** Only ever redirect to a known internal app path — never trust an arbitrary posted URL. */
 export function safeNextPath(next: unknown): string | null {

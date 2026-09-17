@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUserId } from "@/lib/auth";
 import { sendEmail, signupConfirmationEmail } from "@/lib/email";
 import { LANGUAGES } from "@/lib/i18n";
+import { isValidTimeZone } from "@/lib/time";
 
 export async function POST(request: Request) {
   const userId = await getSessionUserId();
@@ -16,6 +17,7 @@ export async function POST(request: Request) {
     seniorName,
     seniorPhone,
     preferredCallTime,
+    timezone,
     language,
     faithPreference,
     familyName,
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
       seniorName,
       seniorPhone,
       preferredCallTime,
+      timezone: typeof timezone === "string" && isValidTimeZone(timezone) ? timezone : "America/Toronto",
       language: language && language in LANGUAGES ? language : "en",
       faithPreference: faithPreference || null,
       familyName,

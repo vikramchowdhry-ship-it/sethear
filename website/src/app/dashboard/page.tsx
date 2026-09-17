@@ -133,6 +133,12 @@ export default async function Dashboard() {
 
         <div className="space-y-4">
           <DashboardLink
+            href="/settings"
+            icon="⚙️"
+            title="Settings"
+            body="Change call time, time zone, or reminders"
+          />
+          <DashboardLink
             href="/family-tree"
             icon="🌳"
             title="Family Tree"

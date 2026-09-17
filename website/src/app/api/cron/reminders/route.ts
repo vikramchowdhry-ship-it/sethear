@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getTwilioClient, twilioConfigured } from "@/lib/twilio";
+import { localDateKeyInTz, scheduledInstant } from "@/lib/time";
 
 // Matches scheduled times ("HH:MM") within this many minutes of right now,
 // so a cron that doesn't run exactly on the minute still catches them.
@@ -19,16 +20,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ skipped: true, reason: "Twilio not configured yet" });
   }
 
-  // NOTE: scheduledTime/preferredCallTime are plain "HH:MM" with no timezone
-  // attached, compared against server time (UTC on Vercel) — a real deployment
-  // should ask each family for a timezone and convert.
+  // scheduledTime/preferredCallTime are plain "HH:MM" in the senior's own
+  // timezone (SeniorProfile.timezone). isWithinWindow/localDateKeyInTz convert
+  // that to a real instant before comparing against server time (UTC).
   const now = new Date();
-  const todayKey = now.toISOString().slice(0, 10);
   const client = getTwilioClient();
   const baseUrl = process.env.PUBLIC_BASE_URL || "";
 
-  const reminderResults = await sendDueReminders(client, baseUrl, now, todayKey);
-  const checkInResults = await sendDueCheckIns(client, baseUrl, now, todayKey);
+  const reminderResults = await sendDueReminders(client, baseUrl, now);
+  const checkInResults = await sendDueCheckIns(client, baseUrl, now);
   const staleSessionsDeleted = await deleteStaleCallSessions();
 
   return NextResponse.json({
@@ -57,7 +57,6 @@ async function sendDueReminders(
   client: ReturnType<typeof getTwilioClient>,
   baseUrl: string,
   now: Date,
-  todayKey: string,
 ) {
   const dueReminders = await prisma.reminder.findMany({
     where: { recurrence: "daily" },
@@ -67,10 +66,12 @@ async function sendDueReminders(
   const results: { reminderId: string; status: string }[] = [];
 
   for (const reminder of dueReminders) {
-    if (!isWithinWindow(reminder.scheduledTime, now)) continue;
+    const tz = reminder.senior.timezone;
+    if (!isWithinWindow(reminder.scheduledTime, tz, now)) continue;
 
+    const todayKey = localDateKeyInTz(now, tz);
     const alreadySentToday =
-      reminder.lastSentAt && reminder.lastSentAt.toISOString().slice(0, 10) === todayKey;
+      reminder.lastSentAt && localDateKeyInTz(reminder.lastSentAt, tz) === todayKey;
     if (alreadySentToday) continue;
 
     try {
@@ -96,16 +97,17 @@ async function sendDueCheckIns(
   client: ReturnType<typeof getTwilioClient>,
   baseUrl: string,
   now: Date,
-  todayKey: string,
 ) {
   const seniors = await prisma.seniorProfile.findMany();
   const results: { seniorId: string; status: string }[] = [];
 
   for (const senior of seniors) {
-    if (!isWithinWindow(senior.preferredCallTime, now)) continue;
+    const tz = senior.timezone;
+    if (!isWithinWindow(senior.preferredCallTime, tz, now)) continue;
 
+    const todayKey = localDateKeyInTz(now, tz);
     const alreadyCalledToday =
-      senior.lastCheckInAt && senior.lastCheckInAt.toISOString().slice(0, 10) === todayKey;
+      senior.lastCheckInAt && localDateKeyInTz(senior.lastCheckInAt, tz) === todayKey;
     if (alreadyCalledToday) continue;
 
     try {
@@ -127,13 +129,11 @@ async function sendDueCheckIns(
   return { checked: seniors.length, results };
 }
 
-function isWithinWindow(scheduledTime: string, now: Date) {
+function isWithinWindow(scheduledTime: string, timeZone: string, now: Date) {
   const [h, m] = scheduledTime.split(":").map(Number);
   if (Number.isNaN(h) || Number.isNaN(m)) return false;
 
-  const scheduled = new Date(now);
-  scheduled.setHours(h, m, 0, 0);
-
+  const scheduled = scheduledInstant(scheduledTime, timeZone, now);
   const diffMinutes = Math.abs(now.getTime() - scheduled.getTime()) / 60000;
   return diffMinutes <= MATCH_WINDOW_MINUTES;
 }

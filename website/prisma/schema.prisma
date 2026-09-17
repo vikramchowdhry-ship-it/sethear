@@ -36,6 +36,7 @@ model SeniorProfile {
   seniorName        String
   seniorPhone       String
   preferredCallTime String
+  timezone          String  @default("America/Toronto") // IANA name, e.g. "America/Toronto" — the senior's own local timezone
   language          String  @default("en") // "en" | "fr" | "es" | "hi" | "pa" | "zh"
   faithPreference   String? // e.g. "christian", "muslim", "jewish", "hindu", "buddhist", "none"
   familyName        String
